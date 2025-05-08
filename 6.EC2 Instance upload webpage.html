@@ -1,0 +1,89 @@
+# ✅ Step 1: Sign in to AWS Management Console
+# Go to https://aws.amazon.com and log into your AWS account.
+
+# ✅ Step 2: Launch an EC2 Instance
+
+# 1. Open EC2 Dashboard using the search bar at the top → type "EC2" → click "EC2".
+
+# 2. Click “Launch Instance” to create a new virtual machine.
+
+# 3. Name your instance (e.g., MyWebServer) — this is just for you to identify it.
+
+# 4. Choose Amazon Machine Image (AMI):
+#    - Select: Amazon Linux 2023 AMI (HVM), SSD Volume Type — it's lightweight and supported.
+
+# 5. Choose Instance Type:
+#    - Select t2.micro — this is eligible under AWS Free Tier (for free usage limits).
+
+# 6. Create a Key Pair:
+#    - Name it something like `web-key`.
+#    - Download the `.pem` file — it's your private key for SSH login. Keep it safe!
+
+# 7. Configure Network:
+#    - Allow HTTP (port 80) so your website is publicly accessible.
+#    - Allow SSH (port 22) so you can log in to your instance.
+#    - Choose "Anywhere" (0.0.0.0/0) — okay for practice; not ideal for production.
+
+# 8. Storage:
+#    - Leave as default (8 GiB is plenty for a basic website).
+
+# 9. Click “Launch Instance” to create your server.
+
+# Wait for the instance to fully start, then click “View Instances” to see it.
+
+# ✅ Step 3 (Windows): Connect to EC2 via SSH
+
+# 🛠 Option 1: Using Windows PowerShell
+
+# Open PowerShell
+
+# Navigate to the folder where your `.pem` file is downloaded
+cd "C:\Users\YourUsername\Downloads"
+
+# SSH into your EC2 instance
+ssh -i your-key.pem ec2-user@your-ec2-public-ip
+# (ec2-user is the default login user for Amazon Linux)
+
+# ✅ Step 4: Set Up Your Web Server (NGINX)
+
+# Update your EC2 system's installed packages
+sudo yum update -y
+
+# Install NGINX (a popular, fast web server)
+sudo amazon-linux-extras install nginx1 -y
+
+# Start the NGINX service
+sudo systemctl start nginx
+
+# Make sure it starts automatically every time the server reboots
+sudo systemctl enable nginx
+
+# ✅ Step 5: Deploy Your HTML Site
+
+# Go to the directory where NGINX serves your website files
+cd /usr/share/nginx/html
+
+# Remove the default NGINX landing page (index.html)
+sudo rm index.html
+
+# Install Git so you can clone your GitHub repo
+sudo yum install git -y
+
+# Clone your GitHub repository to the EC2 server
+sudo git clone https://github.com/your-username/your-repo.git
+
+# Copy your main HTML file into the NGINX root directory
+sudo cp your-repo/index.html .
+
+# (Optional) If you have a CSS file, copy that too
+sudo cp your-repo/style.css /usr/share/nginx/html
+
+# Restart NGINX to apply the changes
+sudo systemctl restart nginx
+
+# ✅ Step 6: View Your Website
+
+# Now visit your EC2 public IP in a browser:
+# → http://your-ec2-public-ip
+
+# You should see your website live!
